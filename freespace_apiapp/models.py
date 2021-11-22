@@ -19,7 +19,7 @@ class Designation(models.Model):
 #---------------------------------------------User model----------------------------------------------
 class User(AbstractUser):
     name = models.CharField(max_length=255)
-    email = models.CharField(max_length=255, unique=True)
+    email = models.EmailField(max_length=255, unique=True)
     password = models.CharField(max_length=255)
     designation_id=models.ForeignKey(Designation,on_delete=models.CASCADE,null=True)
     username = None

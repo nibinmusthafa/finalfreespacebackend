@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 """
 
 from pathlib import Path
+from datetime import timedelta
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -40,6 +41,7 @@ INSTALLED_APPS = [
     'freespace_apiapp',
     'rest_framework',
     'corsheaders',
+    # 'rest_framework_simplejwt',
 
 ]
 #-------------------------------------------
@@ -49,6 +51,26 @@ CORS_ORIGIN_ALLOW_ALL = True
 CORS_ALLOW_CREDENTIALS =True
 
 AUTH_USER_MODEL = 'freespace_apiapp.User'
+
+
+# REST_FRAMEWORK = {
+    
+#     'DEFAULT_AUTHENTICATION_CLASSES': (
+    
+#     'rest_framework_simplejwt.authentication.JWTAuthentication',
+#     ),
+
+#     'DEFAULT_PERMISSION_CLASSES':[
+#        'rest_framework.permissions.IsAuthenticated',
+#    ]
+    
+# }
+
+# SIMPLE_JWT ={
+#     'ACCES_TOKEN_LIFETIME': timedelta(days=1),
+#     'REFRESH_TOKEN_LIFETIME':timedelta(days=1),
+# }
+
 #--------------------------------------------------
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',

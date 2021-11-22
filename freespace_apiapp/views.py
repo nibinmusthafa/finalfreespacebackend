@@ -7,8 +7,13 @@ import jwt, datetime
 
 from rest_framework import generics
 
+from rest_framework import status
+
+# from rest_framework.permissions import IsAuthenticated
 
 # Create your views here.
+
+#----------------------------------------register--------------------------------------------
 class RegisterView(APIView):
     def post(self, request):
         serializer = UserSerializer(data=request.data)
@@ -37,20 +42,27 @@ class LoginView(APIView):
         }
 
         token = jwt.encode(payload, 'secret', algorithm='HS256').decode('utf-8')
-
+    
         response = Response()
-
-        response.set_cookie(key='jwt', value=token, httponly=True)
+        
+        # response.set_cookie(key='jwt', value=token, httponly=False)
         response.data = {
-            'jwt': token
+            'jwt': token,
+            'id':user.id,
+            'name':user.name
         }
         return response
 
 #----------------------------------------------------userview--------------------------------------
 class UserView(APIView):
-
+    #permisson_classes =[IsAuthenticated]  
     def get(self, request):
-        token = request.COOKIES.get('jwt')
+        
+        #token = request.COOKIES.get('token')
+        token = request.headers.get('token')
+        #token = request.data['jwt']
+        #token = request.data.get('jwt')
+        #token = request.authenticate_header.get('jwt_key')
 
         if not token:
             raise AuthenticationFailed('Unauthenticated!')
@@ -59,7 +71,7 @@ class UserView(APIView):
             payload = jwt.decode(token, 'secret', algorithm=['HS256'])
         except jwt.ExpiredSignatureError:
             raise AuthenticationFailed('Unauthenticated!')
-
+   
         user = User.objects.filter(id=payload['id']).first()
         serializer = UserSerializer(user)
         return Response(serializer.data)
@@ -74,8 +86,9 @@ class LogoutView(APIView):
         }
         return response
 
-# ---------------- Designation #-------------------#-------------------#--------------------
+# -----------------------------------Designation--------------------------------------------------------
 class AddDesignation(generics.CreateAPIView):
+    
        
     serializer_class=DesignationSerializer        
     def post(self, request):
@@ -136,7 +149,7 @@ class Listdesigners(generics.GenericAPIView):
        
     serializer_class=UserSerializer        
     def get(self, request):
-        queryset = User.objects.filter(user_designation=3)
+        queryset = User.objects.filter(designation_id=3)
         serializer = UserSerializer(queryset, many=True)
         return Response(serializer.data)
 #-----------------------------------------supervisor--------------------------------------
@@ -146,7 +159,7 @@ class Listsupervisor(generics.GenericAPIView):
        
     serializer_class=UserSerializer        
     def get(self, request):
-        queryset = User.objects.filter(user_designation=2)
+        queryset = User.objects.filter(designation_id=2)
         serializer = UserSerializer(queryset, many=True)
         return Response(serializer.data)
 

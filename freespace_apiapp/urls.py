@@ -8,18 +8,30 @@ from .views import *
 from .import views
 # from .views import AddAddress, AddCustomer, AddDesignation, DeleteAddress, DeleteCustomer, GetCustomer, GetDesignation, ListAddress, ListCustomers, ListDesignations, ListState, Listdesigners, Listsupervisor, ListuserView, PatchCustomer, RegisterView, LoginView, UpdateAddress, UserView, LogoutView
 
+# from rest_framework_simplejwt.views import (
+#     TokenObtainPairView,
+#     TokenRefreshView,
+# )
 urlpatterns = [
+    #path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
+    #path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
+
     path('register/', RegisterView.as_view()),
     path('login/', LoginView.as_view()),
     path('user/', UserView.as_view()),
     path('logout/', LogoutView.as_view()),
+  
+
+    #path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
+    # path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
+
 #------------------------ Designation----------------------------------------------------------
     path('adddesignation/',AddDesignation.as_view()),                        
     path('getdesignation/<int:pk>/',GetDesignation.as_view()),
     path('listdesignations/',ListDesignations.as_view()),
                      #-------designer-------
-    path('listdesigner/',Listdesigners.as_view()),
-                    #----supervisor -----
+    path('listdesigners/',Listdesigners.as_view()),
+                    #--------supervisor-----
     path('listsupervisors/',Listsupervisor.as_view()),
 #----------------------state--------------------------------------------------------------------
     # path('addstate/',AddState.as_view()),  
@@ -32,7 +44,7 @@ urlpatterns = [
     path('deleteaddress/<int:pk>/',DeleteAddress.as_view()),
     path('updateaddress/<int:pk>/',UpdateAddress.as_view()),
                        #single customer single address
-    path('addcustomer/',views.Createsingleaddress.as_view()),
+    path('addcustomer/',Createsingleaddress.as_view()),
 #---------------------customer------------------------------------------------------------------
     path('addsinglecustomer/',AddCustomer.as_view()),
     path('listcustomers/',ListCustomers.as_view()),
@@ -55,11 +67,11 @@ urlpatterns = [
                 #----update status in lead------
     path('updatestatusinlead/<int:pk>/',views.PatchLead.as_view()),
                 #------list leads by ID ss------
-    path('getleadbydesigners/<int:id>/',views.Getleadbydesigner.as_view()),   
-    path('getleadbyusers/<int:id>/',views.Getleadbyuser.as_view()),
-    path('getleadbysupervisor/<int:id>/',views.Getleadbysupervisor.as_view()),
-                #------Lead + Category + SubCategory-------- 
-    path('createlead/',views.LeadView.as_view()),
+    path('getleadbydesigners/<int:id>/',Getleadbydesigner.as_view()),   
+    path('getleadbyusers/<int:id>/',Getleadbyuser.as_view()),
+    path('getleadbysupervisor/<int:id>/',Getleadbysupervisor.as_view()),
+                #------Lead + Category + SubCategory------ 
+    path('createlead/',LeadView.as_view()),
 
 
 #-------------------file------------------------------------------------------------------------

@@ -82,7 +82,7 @@ INSTALLED_APPS = [
     'cloudinary_storage',
     'cloudinary', 
 
-    # 'rest_framework_simplejwt',
+    #'rest_framework_simplejwt',
 
 ]
 #-------------------------------------------cloudinary----------------------------------------------

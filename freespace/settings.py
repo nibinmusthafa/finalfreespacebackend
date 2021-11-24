@@ -29,6 +29,44 @@ DEBUG = True
 ALLOWED_HOSTS = ['*']
 
 
+
+
+#---------------------------------------
+
+
+
+CORS_ALLOWED_ORIGINS = [
+    'http://192.168.1.6:4200',
+    'http://192.168.1.7:4200',
+    'http://127.0.0.1:4200',
+    'http://localhost:4200',
+
+]
+CORS_ALLOW_METHODS = [
+    'DELETE',
+    'GET',
+    'OPTIONS',
+    'PATCH',
+    'POST',
+    'PUT',
+]
+
+CORS_ALLOW_HEADERS = [
+    'token',
+    'accept',
+    'accept-encoding',
+    'authorization',
+    'content-type',
+    'dnt',
+    'origin',
+    'user-agent',
+    'x-csrftoken',
+    'x-requested-with',
+]
+
+
+
+
 # Application definition
 
 INSTALLED_APPS = [
@@ -37,14 +75,30 @@ INSTALLED_APPS = [
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
-    'django.contrib.staticfiles',
     'freespace_apiapp',
     'rest_framework',
     'corsheaders',
+    'django.contrib.staticfiles',
+    'cloudinary_storage',
+    'cloudinary', 
+
     # 'rest_framework_simplejwt',
 
 ]
-#-------------------------------------------
+#-------------------------------------------cloudinary----------------------------------------------
+
+
+CLOUDINARY_STORAGE = {
+    'CLOUD_NAME': 'nibinm',
+    'API_KEY': '664699558578829',
+    'API_SECRET': 'kYRKCyl1aRCLcKtoDQ9aVRozfxA'
+}
+
+
+MEDIA_URL = '/media/'  # or any prefix you choose
+DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
+
+#-------------------------------------------cors--------------------------------------------------------
 
 CORS_ORIGIN_ALLOW_ALL = True
 

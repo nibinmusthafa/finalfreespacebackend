@@ -107,6 +107,7 @@ class Category_Subtype(models.Model):
 class Status(models.Model):
     status_value=models.CharField(max_length=50,null=True)
     designation_id=models.ForeignKey(Designation,on_delete=models.CASCADE,null=True)
+    display_for=models.ForeignKey(Designation,related_name='designer',on_delete=models.CASCADE,null=True)
 
     class Meta:
         ordering = ['id']
@@ -243,3 +244,18 @@ class Project_Payment(models.Model):
 
     def __str__(self):
         return self.updated_on
+
+
+#--------------------------------------Customer_Followup------------------------------------------------------------
+
+class Customer_Followup(models.Model):
+    lead_id=models.ForeignKey(Lead,on_delete=models.CASCADE)
+    updated_by=models.ForeignKey(User,on_delete=models.CASCADE)
+    followup_date=models.DateField(null=True)
+    datetime = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering =['id']
+
+    def __str__(self):
+        return self.followup_date

@@ -1,7 +1,7 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.exceptions import AuthenticationFailed
-from .serializers import AddressSerializer, CategorySerializer, CategorySubtypeSerializer, CustomerSerializer, DesignationSerializer, FileSerializer, LeadSerializer, LeadcategorySerializer, LeadremarksSerializer, LeadsourceSerializer, ProjectSerializer, ProjectpaymentSerializer, SingleaddressSerializer, StateSerializer, StatusSerializer, StatustrackerSerializer, SubCategorySerializer, UserSerializer
+from .serializers import AddressSerializer, CategorySerializer, CategorySubtypeSerializer, Customer_FollowupSerializer, CustomerSerializer, DesignationSerializer, FileSerializer, LeadSerializer, LeadcategorySerializer, LeadremarksSerializer, LeadsourceSerializer, ProjectSerializer, ProjectpaymentSerializer, SingleaddressSerializer, StateSerializer, StatusSerializer, StatustrackerSerializer, SubCategorySerializer, UserSerializer
 from .models import Address, Category, Category_Subtype, Customer, Designation, File, Lead, LeadSource, Leadcategory, Leadremarks, Project, Project_Payment, State, Status, Statustracker, Sub_Category, User
 import jwt, datetime
 
@@ -967,5 +967,18 @@ class UpdateProjectpayment(generics.UpdateAPIView):
             ser.save()
             return Response("updated")
 
+#------------------customer follow up--------------------------------------------------------------
+
+
+class AddCustomer_Followup(generics.CreateAPIView):
+       
+    serializer_class=Customer_FollowupSerializer        
+    def post(self, request):
+        print(request.data)
+        serializer = Customer_FollowupSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response("added succesfully")
+        return Response("failed")
 
     

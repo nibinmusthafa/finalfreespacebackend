@@ -15,7 +15,7 @@ from rest_framework.decorators import api_view
 
 from freespace_apiapp.models import Designation
 
-from .models import Address, Category, Category_Subtype, Customer, Designation, File, Lead, LeadSource, Leadcategory, Leadremarks, Project, Project_Payment, State, Status, Statustracker, Sub_Category, User
+from .models import Address, Category, Category_Subtype, Customer, Customer_Followup, Designation, File, Lead, LeadSource, Leadcategory, Leadremarks, Project, Project_Payment, State, Status, Statustracker, Sub_Category, User
 
 
 
@@ -114,7 +114,7 @@ class StatusSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Status
-        fields = ('id','status_value','designation_id')
+        fields = ('id','status_value','designation_id','display_for')
 
 #-----------------------------Statustracker----------------------------------------
 class StatustrackerSerializer(serializers.ModelSerializer):
@@ -211,4 +211,12 @@ class ProjectpaymentSerializer(serializers.ModelSerializer):
         model =Project_Payment
         fields = ('id','project_id','paytype','pay_amount','reason','updated_on')
 
+
+#-----------------------------Customer_Followup----------------------------------------
+class Customer_FollowupSerializer(serializers.ModelSerializer):
+
+
+    class Meta:
+        model = Customer_Followup
+        fields = ('id','updated_by','lead_id','followup_date','datetime')
 

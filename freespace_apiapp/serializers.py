@@ -15,7 +15,7 @@ from rest_framework.decorators import api_view
 
 from freespace_apiapp.models import Designation
 
-from .models import Address, Category, Category_Subtype, Customer, Customer_Followup, Designation, File, Lead, LeadSource, Leadcategory, Leadremarks, Project, Project_Payment, State, Status, Statustracker, Sub_Category, User
+from .models import Address, Category, Category_Subtype, Customer, Customer_Followup, Designation, File, Lead, LeadSource, Leadcategory, Leadremarks, Project, Project_Payment, State, Status, Statustracker, Sub_Category, Tempfile, User
 
 
 
@@ -129,9 +129,26 @@ class StatustrackerSerializer(serializers.ModelSerializer):
 #-----------------------------------------File------------------------------------
 
 class FileSerializer(serializers.ModelSerializer):
-  class Meta:
+
+    class Meta:
         model = File
-        fields = ('id','file_name','date','user_id','lead_id')
+        fields = ('id','file_name','date','user_id','lead_id', 'url')
+
+    def create(self, validated_data,filedata):
+        print(filedata)
+        #tempfile_id = filedata.get('id')
+        #temp_obj = Tempfile.objects.create(**tempfile_id)
+        
+        file_name = filedata.get('name')
+        url =filedata.get('file')
+        user_id = validated_data.pop('user_id')
+        #user_obj = User.objects.create(user_id)
+        lead_id = validated_data.pop('lead_id')
+        #lead_obj = Lead.objects.create(lead_id)
+
+        fileobj = File.objects.create(lead_id=lead_id,file_name=file_name,url=url,user_id=user_id)
+        fileobj.save()
+
 #-----------------------------------lead--------------------------------------------
 
 class LeadSerializer(serializers.ModelSerializer):
@@ -214,9 +231,17 @@ class ProjectpaymentSerializer(serializers.ModelSerializer):
 
 #-----------------------------Customer_Followup----------------------------------------
 class Customer_FollowupSerializer(serializers.ModelSerializer):
+ 
 
 
     class Meta:
         model = Customer_Followup
         fields = ('id','updated_by','lead_id','followup_date','datetime')
+
+#-------------------------------------------------temp file----------------------------------
+
+class TempfileSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Tempfile
+        fields ='__all__'
 

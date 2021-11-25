@@ -29,12 +29,13 @@ urlpatterns = [
     path('adddesignation/', AddDesignation.as_view()),
     path('getdesignation/<int:pk>/', GetDesignation.as_view()),
     path('listdesignations/', ListDesignations.as_view()),
+    path('UpdateDesignation/<int:pk>/', UpdateDesignation.as_view()),
     # -------designer-------
     path('listdesigners/', Listdesigners.as_view()),
     # --------supervisor-----
     path('listsupervisors/', Listsupervisor.as_view()),
     # ----------------------state--------------------------------------------------------------------
-    # path('addstate/',AddState.as_view()),
+    path('AddState/',AddState.as_view()),
     path('liststate/', ListState.as_view()),
     # path('deletestate/<int:pk>/',DeleteState.as_view()),
     # path('updatestate/<int:pk>/',UpdateState.as_view()),
@@ -76,7 +77,7 @@ urlpatterns = [
 
     # -------------------file------------------------------------------------------------------------
     path('addfile/', AddFile.as_view()),
-    path('listfile/', ListFile.as_view()),
+    path('listfile/<int:pk>/', ListFile.as_view()),
     path('deletefile/<int:pk>/', DeleteFile.as_view()),
     path('updatefile/<int:pk>/', UpdateFile.as_view()),
     # --------------------lead remarks---------------------------------------------------------------
@@ -92,6 +93,7 @@ urlpatterns = [
     # --------------------status---------------------------------------------------------------------
     path('addstatus/', AddStatus.as_view()),
     path('liststatus/', ListStatus.as_view()),
+    path('getstatusbydisplay/', GetStatusbydisplay.as_view()),
     path('deletestatus/<int:pk>/', DeleteStatus.as_view()),
     path('updatestatus/<int:pk>/', UpdateStatus.as_view()),
     # --------------------statustracker--------------------------------------------------------------
@@ -134,6 +136,9 @@ urlpatterns = [
     path('updateprojectpayement/<int:pk>/', UpdateProjectpayment.as_view()),
 
     # path('remarksfile/',views.Createleadremarks.as_view()),
-    path('addfollowup/', AddCustomer_Followup.as_view())
+    path('addfollowup/', AddCustomer_Followup.as_view()),
+    path('listfollowup/', Listcustomerfollowup.as_view()),
+    path('getfollowup/<int:pk>/', Getcustomerfollowup.as_view()),
+    path('addimage/', AddImage.as_view()),
 
 ]

@@ -29,10 +29,7 @@ DEBUG = True
 ALLOWED_HOSTS = ['*']
 
 
-
-
-#---------------------------------------
-
+# ---------------------------------------
 
 
 CORS_ALLOWED_ORIGINS = [
@@ -65,8 +62,6 @@ CORS_ALLOW_HEADERS = [
 ]
 
 
-
-
 # Application definition
 
 INSTALLED_APPS = [
@@ -75,17 +70,17 @@ INSTALLED_APPS = [
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
+    'django.contrib.staticfiles',
     'freespace_apiapp',
     'rest_framework',
     'corsheaders',
-    'django.contrib.staticfiles',
     'cloudinary_storage',
-    'cloudinary', 
+    'cloudinary',
 
-    #'rest_framework_simplejwt',
+    # 'rest_framework_simplejwt',
 
 ]
-#-------------------------------------------cloudinary----------------------------------------------
+# -------------------------------------------cloudinary----------------------------------------------
 
 
 CLOUDINARY_STORAGE = {
@@ -96,28 +91,30 @@ CLOUDINARY_STORAGE = {
 
 
 MEDIA_URL = '/media/'  # or any prefix you choose
-DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
+DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.RawMediaCloudinaryStorage'
 
-#-------------------------------------------cors--------------------------------------------------------
+
+
+# -------------------------------------------cors--------------------------------------------------------
 
 CORS_ORIGIN_ALLOW_ALL = True
 
-CORS_ALLOW_CREDENTIALS =True
+CORS_ALLOW_CREDENTIALS = True
 
 AUTH_USER_MODEL = 'freespace_apiapp.User'
 
 
 # REST_FRAMEWORK = {
-    
+
 #     'DEFAULT_AUTHENTICATION_CLASSES': (
-    
+
 #     'rest_framework_simplejwt.authentication.JWTAuthentication',
 #     ),
 
 #     'DEFAULT_PERMISSION_CLASSES':[
 #        'rest_framework.permissions.IsAuthenticated',
 #    ]
-    
+
 # }
 
 # SIMPLE_JWT ={
@@ -125,7 +122,7 @@ AUTH_USER_MODEL = 'freespace_apiapp.User'
 #     'REFRESH_TOKEN_LIFETIME':timedelta(days=1),
 # }
 
-#--------------------------------------------------
+# --------------------------------------------------
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -161,10 +158,16 @@ WSGI_APPLICATION = 'freespace.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
+
+
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'freespace',
+        'USER': 'root',
+        'PASSWORD': 'Ayana@1234',
+        'HOST': 'localhost',
+        'PORT': '',
     }
 }
 
@@ -211,3 +214,12 @@ STATIC_URL = '/static/'
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+
+REST_FRAMEWORK = {
+    # 'DATETIME_FORMAT': '%B %d, %Y', # returns November 8, 2021
+    "DATE_INPUT_FORMATS": ["%m/%d/%Y"],  # return   31/03/2020
+}
+
+
+# cloudinary_storage.storage.RawMediaCloudinaryStorage

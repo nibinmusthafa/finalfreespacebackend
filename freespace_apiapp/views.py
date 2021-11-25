@@ -1,8 +1,8 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.exceptions import AuthenticationFailed
-from .serializers import AddressSerializer, CategorySerializer, CategorySubtypeSerializer, Customer_FollowupSerializer, CustomerSerializer, DesignationSerializer, FileSerializer, LeadSerializer, LeadcategorySerializer, LeadremarksSerializer, LeadsourceSerializer, ProjectSerializer, ProjectpaymentSerializer, SingleaddressSerializer, StateSerializer, StatusSerializer, StatustrackerSerializer, SubCategorySerializer, UserSerializer
-from .models import Address, Category, Category_Subtype, Customer, Designation, File, Lead, LeadSource, Leadcategory, Leadremarks, Project, Project_Payment, State, Status, Statustracker, Sub_Category, User
+from .serializers import AddressSerializer, CategorySerializer, CategorySubtypeSerializer, Customer_FollowupSerializer, CustomerSerializer, DesignationSerializer, FileSerializer, LeadSerializer, LeadcategorySerializer, LeadremarksSerializer, LeadsourceSerializer, ProjectSerializer, ProjectpaymentSerializer, SingleaddressSerializer, StateSerializer, StatusSerializer, StatustrackerSerializer, SubCategorySerializer, TempfileSerializer, UserSerializer
+from .models import Address, Category, Category_Subtype, Customer, Customer_Followup, Designation, File, Lead, LeadSource, Leadcategory, Leadremarks, Project, Project_Payment, State, Status, Statustracker, Sub_Category, User
 import jwt, datetime
 
 from rest_framework import generics
@@ -131,15 +131,15 @@ class ListDesignations(generics.GenericAPIView):
 #         return Response("Deleted!!")
 
 
-# class UpdateDesignation(generics.UpdateAPIView):
+class UpdateDesignation(generics.UpdateAPIView):
        
-#     serializer_class=DesignationSerializer        
-#     def put(self, request, pk):
-#         des = Designation.objects.get(id=pk)
-#         ser = DesignationSerializer(instance=des, data=request.data)
-#         if ser.is_valid():
-#             ser.save()
-#             return Response("Updated!!")
+    serializer_class=DesignationSerializer        
+    def put(self, request, pk):
+        des = Designation.objects.get(id=pk)
+        ser = DesignationSerializer(instance=des, data=request.data)
+        if ser.is_valid():
+            ser.save()
+            return Response("Updated!!")
 
 
 #------------------------------------------designers--------------------------------------------
@@ -265,20 +265,20 @@ class UpdateAddress(generics.UpdateAPIView):
 # --------------------------------state------------------------------------------
 
 
-# class AddState(generics.CreateAPIView):
+class AddState(generics.CreateAPIView):
        
-#     serializer_class=StateSerializer        
-#     def post(self, request):
-#         duplicate = State.objects.filter(
-#             state_name__icontains=request.data['state_name']).count()
-#         if duplicate > 0:
-#             return Response("Already Existing state ")
-#         else:
-#             serializer = StateSerializer(data=request.data)
-#             if serializer.is_valid():
-#                 serializer.save()
-#                 return Response("added succesfully")
-#             return Response("failed")
+    serializer_class=StateSerializer        
+    def post(self, request):
+        duplicate = State.objects.filter(
+            state_name__icontains=request.data['state_name']).count()
+        if duplicate > 0:
+            return Response("Already Existing state ")
+        else:
+            serializer = StateSerializer(data=request.data)
+            if serializer.is_valid():
+                serializer.save()
+                return Response("added succesfully")
+            return Response("failed")
 
 
 class ListState(generics.GenericAPIView):
@@ -512,8 +512,8 @@ class AddFile(generics.CreateAPIView):
 class ListFile(generics.GenericAPIView):
        
     serializer_class=FileSerializer        
-    def get(self, request):
-        queryset = File.objects.all()
+    def get(self, request,pk):
+        queryset = File.objects.filter(lead_id=pk)
         serializer = FileSerializer(queryset, many=True)
         return Response(serializer.data)
 
@@ -536,6 +536,23 @@ class UpdateFile(generics.UpdateAPIView):
         if ser.is_valid():
             ser.save()
             return Response("Updated!!")
+
+#-------------------------------------------------temp file----------------------------------
+
+class AddImage(generics.CreateAPIView):
+       
+    serializer_class=TempfileSerializer        
+    def post(self, request):
+        serializer = TempfileSerializer(data=request.data)
+        
+        if serializer.is_valid():
+            serializer.save()
+            print(serializer.data)   
+            file_obj = FileSerializer.create(
+                self, serializer.validated_data, serializer.data)
+            #leadcategory = FileSerializer(file_obj).data
+            return Response(serializer.data)         
+        return Response("upload failed")
 
 
 # ----------------------------lead remarks---------------------------------------
@@ -604,7 +621,7 @@ class UpdateLeadremarks(generics.UpdateAPIView):
             ser.save()
             return Response("Updated!!")
 
-# ---------------------------------status#---------------------------------------
+#---------------------------------status---------------------------------------------------
 
 
 class AddStatus(generics.CreateAPIView):
@@ -624,6 +641,16 @@ class ListStatus(generics.GenericAPIView):
 
     def get(self, request):
         queryset = Status.objects.all()
+        serializer = StatusSerializer(queryset, many=True)
+        return Response(serializer.data)
+
+
+class GetStatusbydisplay(generics.GenericAPIView):
+    
+    serializer_class=StatusSerializer
+    
+    def get(self,request):
+        queryset = Status.objects.filter(display_for=3)
         serializer = StatusSerializer(queryset, many=True)
         return Response(serializer.data)
 
@@ -981,4 +1008,29 @@ class AddCustomer_Followup(generics.CreateAPIView):
             return Response("added succesfully")
         return Response("failed")
 
-    
+
+
+class Listcustomerfollowup(generics.GenericAPIView):
+       
+    serializer_class=Customer_FollowupSerializer        
+    def get(self, request):
+        queryset = Customer_Followup.objects.all()
+        ser = Customer_FollowupSerializer(queryset, many=True)
+        return Response(ser.data)
+
+
+
+class Getcustomerfollowup(generics.GenericAPIView):
+       
+    serializer_class=Customer_FollowupSerializer        
+    def get(self, request, pk):
+        queryset = Customer_Followup.objects.filter(lead_id=pk).order_by('-datetime')[:1]
+        # queryset = Customer_Followup.objects.filter(lead_id=pk).first('datetime')
+        # querysett = queryset.first()
+        ser = Customer_FollowupSerializer(queryset, many=True)
+        return Response(ser.data)
+
+
+
+
+

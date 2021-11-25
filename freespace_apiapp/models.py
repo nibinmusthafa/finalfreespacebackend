@@ -33,7 +33,7 @@ class User(AbstractUser):
 class Customer(models.Model):
     customer_firstname = models.CharField(max_length=100,null=True,blank=True)
     customer_lastname = models.CharField(max_length=100,null=True,blank=True)
-    customer_phonenumber= models.IntegerField(null=True,blank=True)
+    customer_phonenumber= models.CharField(max_length=10,null=True,blank=True)
     email = models.EmailField(max_length=100,null=True,blank=True)
     updated_by =models.ForeignKey(User,on_delete=models.CASCADE,null=True)
     updated_on = models.DateTimeField(auto_now_add=True)
@@ -131,8 +131,6 @@ class LeadSource(models.Model):
 #---------------------------------------------Lead-------------------------------------------------------
 
 class Lead(models.Model):
-
-
     created_by = models.ForeignKey(User,related_name='fuser_id',on_delete=models.CASCADE,null=True,blank=True)
     designer_id = models.ForeignKey(User,related_name='designer_id',on_delete=models.CASCADE,null=True,blank=True)
     customer_id = models.ForeignKey(Customer,on_delete=models.CASCADE,null=True,blank=True)
@@ -156,7 +154,7 @@ class Lead(models.Model):
 class Statustracker(models.Model):
     lead_id = models.ForeignKey(Lead,on_delete=models.CASCADE,null=True)
     status_id = models.ForeignKey(Status,on_delete=models.CASCADE,null=True)
-    date = models.DateTimeField(null=True)
+    date = models.DateTimeField(auto_now_add=True, null=True)
     user_id = models.ForeignKey(User,on_delete=models.CASCADE,null=True)
     
     class Meta:
@@ -167,12 +165,28 @@ class Statustracker(models.Model):
 
 
 
+
+
+#------------------------------------------temp file-----------------------------------------
+class Tempfile(models.Model):
+    name=models.CharField(max_length=200,null=True)
+    file=models.FileField(upload_to='images/',blank=True)
+    lead_id= models.ForeignKey(Lead,on_delete=models.CASCADE,null=True)
+    user_id = models.ForeignKey(User,on_delete=models.CASCADE,null=True)
+
+    class Meta:
+        ordering =['id']
+
+    def __str__(self):
+        return self.name
 #------------------------------------------file table------------------------------------------
 
 class File(models.Model):
     file_name = models.CharField(max_length=100,null=True)
+    url=models.CharField(max_length=500,null=True)
     date=models.DateTimeField(auto_now_add=True)
     user_id=models.ForeignKey(User,on_delete=models.CASCADE,null=True)
+    #tempfile_id=models.ForeignKey(Tempfile,related_name='tempfile_id',on_delete=models.CASCADE,null=True)
     lead_id= models.ForeignKey(Lead,on_delete=models.CASCADE,null=True)
 
     class Meta:
@@ -180,6 +194,7 @@ class File(models.Model):
 
     def __str__(self):
         return self.file_name
+
 
 #---------------------------------------------Lead remarks-----------------------------------------
 
@@ -255,7 +270,9 @@ class Customer_Followup(models.Model):
     datetime = models.DateTimeField(auto_now_add=True)
 
     class Meta:
-        ordering =['id']
+        ordering =['-datetime']
 
     def __str__(self):
         return self.followup_date
+
+

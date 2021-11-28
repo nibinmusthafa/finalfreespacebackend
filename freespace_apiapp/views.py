@@ -1031,6 +1031,3 @@ class Getcustomerfollowup(generics.GenericAPIView):
         return Response(ser.data)
 
 
-
-
-

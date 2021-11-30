@@ -1,8 +1,8 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.exceptions import AuthenticationFailed
-from .serializers import AddressSerializer, CategorySerializer, CategorySubtypeSerializer, Customer_FollowupSerializer, CustomerSerializer, DesignationSerializer, FileSerializer, LeadSerializer, LeadcategorySerializer, LeadremarksSerializer, LeadsourceSerializer, ProjectSerializer, ProjectpaymentSerializer, SingleaddressSerializer, StateSerializer, StatusSerializer, StatustrackerSerializer, SubCategorySerializer, TempfileSerializer, UserSerializer
-from .models import Address, Category, Category_Subtype, Customer, Customer_Followup, Designation, File, Lead, LeadSource, Leadcategory, Leadremarks, Project, Project_Payment, State, Status, Statustracker, Sub_Category, User
+from .serializers import AddressSerializer, CategorySerializer, CategorySubtypeSerializer, CountrySerializer, Customer_FollowupSerializer, CustomerSerializer, DesignationSerializer, FileSerializer, LeadSerializer, LeadcategorySerializer, LeadremarksSerializer, LeadsourceSerializer, ProjectSerializer, ProjectpaymentSerializer, SingleaddressSerializer, StateSerializer, StatusSerializer, StatustrackerSerializer, SubCategorySerializer, TempfileSerializer, UserSerializer
+from .models import Address, Category, Category_Subtype, Country, Customer, Customer_Followup, Designation, File, Lead, LeadSource, Leadcategory, Leadremarks, Project, Project_Payment, State, Status, Statustracker, Sub_Category, User
 import jwt, datetime
 
 from rest_framework import generics
@@ -261,6 +261,17 @@ class UpdateAddress(generics.UpdateAPIView):
             ser.save()
             return Response("updated")
 
+# class UpdateAddresscustomer(generics.UpdateAPIView):
+       
+#     serializer_class=AddressSerializer        
+#     def put(self, request,id,pk):
+#         des = Address.objects.get(customer_id=id)
+#         ser = AddressSerializer(instance=des, data=request.data)
+#         dess = Customer.objects.get(id=pk)
+#         serr = CustomerSerializer(instance=dess, data=request.data)
+#         if ser and serr.is_valid():
+#             ser and serr.save()
+#             return Response("updated")
 
 # --------------------------------state------------------------------------------
 
@@ -310,6 +321,33 @@ class ListState(generics.GenericAPIView):
 #             ser.save()
 #             return Response("updated")
 
+
+
+class AddCountry(generics.CreateAPIView):
+       
+    serializer_class=CountrySerializer        
+    def post(self, request):
+        duplicate = Country.objects.filter(
+            country_name__icontains=request.data['country_name']).count()
+        if duplicate > 0:
+            return Response("Already Existing country ")
+        else:
+            serializer = CountrySerializer(data=request.data)
+            if serializer.is_valid():
+                serializer.save()
+                return Response("added succesfully")
+            return Response("failed")
+
+
+class ListCountry(generics.GenericAPIView):
+       
+    serializer_class=CountrySerializer        
+    def get(self, request):
+        queryset = Country.objects.all()
+        serializer = CountrySerializer(queryset, many=True)
+        return Response(serializer.data)
+
+
 # ------------------------CUSTOMER and ADDRESS------------------------------------------
 
 
@@ -326,6 +364,18 @@ class Createsingleaddress(generics.CreateAPIView):
            
             return Response({"status": True, "message": "Success", "response": {}})
         return Response({"status": False, "message": serializer.errors, "response": {}})
+
+
+# class Updatesingleaddress(generics.UpdateAPIView):
+       
+#     serializer_class=SingleaddressSerializer        
+#     def put(self, request, pk):
+#         des = Address.objects.get(customer_id=pk)
+#         ser = SingleaddressSerializer(instance=des, data=request.data)
+#         if ser.is_valid():
+#             ser.save()
+#             return Response("updated")
+
 
 
 #--------------------------------------category-------------------------------------------
@@ -645,12 +695,21 @@ class ListStatus(generics.GenericAPIView):
         return Response(serializer.data)
 
 
-class GetStatusbydisplay(generics.GenericAPIView):
+class GetStatusfordesigner(generics.GenericAPIView):
     
     serializer_class=StatusSerializer
     
     def get(self,request):
         queryset = Status.objects.filter(display_for=3)
+        serializer = StatusSerializer(queryset, many=True)
+        return Response(serializer.data)
+
+class GetStatusforsupervisor(generics.GenericAPIView):
+    
+    serializer_class=StatusSerializer
+    
+    def get(self,request):
+        queryset = Status.objects.filter(display_for=2)
         serializer = StatusSerializer(queryset, many=True)
         return Response(serializer.data)
 

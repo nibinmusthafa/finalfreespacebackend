@@ -15,7 +15,7 @@ from rest_framework.decorators import api_view
 
 from freespace_apiapp.models import Designation
 
-from .models import Address, Category, Category_Subtype, Customer, Customer_Followup, Designation, File, Lead, LeadSource, Leadcategory, Leadremarks, Project, Project_Payment, State, Status, Statustracker, Sub_Category, Tempfile, User
+from .models import Address, Category, Category_Subtype, Country, Customer, Customer_Followup, Designation, File, Lead, LeadSource, Leadcategory, Leadremarks, Project, Project_Payment, State, Status, Statustracker, Sub_Category, Tempfile, User
 
 
 
@@ -63,13 +63,18 @@ class StateSerializer(serializers.ModelSerializer):
     class Meta:
         model = State
         fields = ('id','state_name')
+#-------------------------------state-------------------------------------------
+class CountrySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Country
+        fields = ('id','country_name')
 
 #------------------------------single address-------------------------------------------
 
 class AddressSerializer(serializers.ModelSerializer):
     class Meta:
         model = Address
-        fields = ('id','customer_id','addr_line1','addr_line2','city','pincode','updated_on','state_id')
+        fields = ('id','customer_id','addr_line1','addr_line2','city','pincode','updated_on','state_id','country_id')
 # --------------------------------single customer address--------------------------------------------
 
 class SingleaddressSerializer(serializers.ModelSerializer):
@@ -77,7 +82,7 @@ class SingleaddressSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Address
-        fields = ('id','customer_id','addr_line1','addr_line2','city','state_id','pincode','updated_on')
+        fields = ('id','customer_id','addr_line1','addr_line2','city','state_id','pincode','updated_on','country_id')
     def create(self, validated_data):
         items = validated_data.pop('customer_id')
         customer_obj = Customer.objects.create(**items)
@@ -130,9 +135,10 @@ class StatustrackerSerializer(serializers.ModelSerializer):
 
 class FileSerializer(serializers.ModelSerializer):
 
+    name = serializers.SerializerMethodField('get_username')
     class Meta:
         model = File
-        fields = ('id','file_name','date','user_id','lead_id', 'url')
+        fields = ('id','file_name','date','user_id','lead_id', 'url','name')
 
     def create(self, validated_data,filedata):
         print(filedata)
@@ -148,7 +154,9 @@ class FileSerializer(serializers.ModelSerializer):
 
         fileobj = File.objects.create(lead_id=lead_id,file_name=file_name,url=url,user_id=user_id)
         fileobj.save()
-
+        
+    def get_username(self,obj):
+        return obj.user_id.name
 #-----------------------------------lead--------------------------------------------
 
 class LeadSerializer(serializers.ModelSerializer):

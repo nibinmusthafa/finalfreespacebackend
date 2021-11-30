@@ -53,7 +53,11 @@ class State(models.Model):
 
     def __str__(self):
         return self.state_name
+class Country(models.Model):
+    country_name = models.CharField(max_length=50,null=True)
 
+    def __str__(self):
+        return self.country_name
 #------------------------------------------------Address model------------------------------------
 class Address(models.Model):
     customer_id = models.ForeignKey(Customer,on_delete=models.CASCADE,null=True)
@@ -61,6 +65,7 @@ class Address(models.Model):
     addr_line2 = models.CharField(max_length=200,null=True)
     city = models.CharField(max_length=50,null=True)
     state_id = models.ForeignKey(State,on_delete=models.CASCADE,null=True)
+    country_id=models.ForeignKey(Country,on_delete=models.CASCADE,null=True)
     pincode = models.IntegerField(null=True)
     updated_on = models.DateTimeField(auto_now_add=True)
 

@@ -39,6 +39,8 @@ urlpatterns = [
     path('liststate/', ListState.as_view()),
     # path('deletestate/<int:pk>/',DeleteState.as_view()),
     # path('updatestate/<int:pk>/',UpdateState.as_view()),
+    path('listcountry/', ListCountry.as_view()),
+    path('Addcountry/',AddCountry.as_view()),
     # ----------------------address------------------------------------------------------------------
     path('addaddress/', AddAddress.as_view()),
     path('listaddress/', ListAddress.as_view()),
@@ -46,6 +48,9 @@ urlpatterns = [
     path('updateaddress/<int:pk>/', UpdateAddress.as_view()),
     # single customer single address
     path('addcustomer/', Createsingleaddress.as_view()),
+    #path('updateecustomer/<int:pk>/', Updatesingleaddress.as_view()),
+    #path('updatecustomerandaddress/<int:id>/<int:pk>/', UpdateAddresscustomer.as_view()),
+    
     # ---------------------customer------------------------------------------------------------------
     path('addsinglecustomer/', AddCustomer.as_view()),
     path('listcustomers/', ListCustomers.as_view()),
@@ -93,7 +98,8 @@ urlpatterns = [
     # --------------------status---------------------------------------------------------------------
     path('addstatus/', AddStatus.as_view()),
     path('liststatus/', ListStatus.as_view()),
-    path('getstatusbydisplay/', GetStatusbydisplay.as_view()),
+    path('getstatusfordesigner/', GetStatusfordesigner.as_view()),
+    path('getstatusforsupervisor/', GetStatusforsupervisor.as_view()),
     path('deletestatus/<int:pk>/', DeleteStatus.as_view()),
     path('updatestatus/<int:pk>/', UpdateStatus.as_view()),
     # --------------------statustracker--------------------------------------------------------------

@@ -35,7 +35,7 @@ class User(AbstractUser):
 class Customer(models.Model):
     customer_firstname = models.CharField(max_length=100,null=True,blank=True)
     customer_lastname = models.CharField(max_length=100,null=True,blank=True)
-    customer_phonenumber= models.CharField(max_length=10,null=True,blank=True)
+    customer_phonenumber= models.CharField(max_length=15,null=True,blank=True)
     email = models.EmailField(max_length=100,null=True,blank=True)
     updated_by =models.ForeignKey(User,on_delete=models.CASCADE,null=True)
     updated_on = models.DateTimeField(auto_now_add=True)
@@ -151,7 +151,7 @@ class Lead(models.Model):
 
     
     class Meta:
-        ordering =['-id']
+        ordering =['id']
 
     def __str__(self):
         return str(self.leadname)
@@ -221,7 +221,7 @@ class Leadremarks(models.Model):
 class Leadcategory(models.Model):
     lead_id= models.ForeignKey(Lead,on_delete=models.CASCADE,null=True)
     category_id = models.ForeignKey(Category,related_name="cats_id",on_delete=models.CASCADE,null=True)
-    sub_cat_id = models.ForeignKey(Sub_Category,on_delete=models.CASCADE,null=True)
+    sub_cat_id = models.ForeignKey(Sub_Category,on_delete=models.CASCADE,  null=True)
     updated_on = models.DateTimeField(auto_now_add=True)
     units = models.IntegerField(null=True,blank=True)
 

@@ -1,13 +1,16 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.exceptions import AuthenticationFailed
-from .serializers import AddressSerializer, CategorySerializer, CategorySubtypeSerializer, CountrySerializer, Customer_FollowupSerializer, CustomerSerializer, DesignationSerializer, FileSerializer, LeadSerializer, LeadcategorySerializer, LeadremarksSerializer, LeadsourceSerializer, ProjectSerializer, ProjectpaymentSerializer, SingleaddressSerializer, StateSerializer, StatusSerializer, StatustrackerSerializer, SubCategorySerializer, TempfileSerializer, UserSerializer
+from .serializers import AddressSerializer, CategorySerializer, CategorySubtypeSerializer, CountrySerializer, Customer_FollowupSerializer, CustomerSerializer, DesignationSerializer, FileSerializer, LeadSerializer, LeadcategorySerializer,LeadremarksSerializer, LeadsourceSerializer, ProjectSerializer, ProjectpaymentSerializer, SingleaddressSerializer, StateSerializer, StatusSerializer, StatustrackerSerializer, SubCategorySerializer, TempfileSerializer, UserSerializer
 from .models import Address, Category, Category_Subtype, Country, Customer, Customer_Followup, Designation, File, Lead, LeadSource, Leadcategory, Leadremarks, Project, Project_Payment, State, Status, Statustracker, Sub_Category, User
 import jwt, datetime
 
 from rest_framework import generics
 
 from rest_framework import status
+
+
+from rest_framework.decorators import api_view
 
 # from rest_framework.permissions import IsAuthenticated
 
@@ -519,6 +522,7 @@ class Getleadbysupervisor(generics.GenericAPIView):
         serializer = LeadSerializer(queryset, many=True)
         return Response(serializer.data)
 
+
  # -------------------------LEAD  AND  CATEGORY (single / multiple)---------------------------
 
 
@@ -545,6 +549,48 @@ class LeadView(generics.CreateAPIView):
         return Response({"status": True, "message": "Success", "response": {}})
 
 
+# class listleadbysupervisor(generics.GenericAPIView):
+       
+#     serializer_class=LeadcategorySerializer        
+#     def get(self, request, id):
+#         queryset = Lead.objects.filter(supervisor_id=id)
+#         serializer = LeadSerializer(queryset, many=True)
+#         return Response(serializer.data)
+
+
+
+    
+
+
+
+# class Listleadcategorysubcategory(generics.CreateAPIView):
+       
+#     serializer_class = LeadcategorysubcategorySerializer
+#     model = Leadcategory
+
+#     def get(self, request,id, *args, **kwargs):
+
+#         serializer = self.get_serializer(data=self.request.data)
+#         designer_id = self.request.data[id]
+#         categories = self.request.data['categories']
+
+#         if serializer.is_valid():
+#             # print(serializer.validated_data)
+#             # print('#####################')
+#             leadcategory_obj = LeadcategorysubcategorySerializer.filter(
+#                 self, serializer.validated_data, categories)
+#             designer_obj = LeadcategorysubcategorySerializer.filter(
+#                 self, serializer.validated_data, designer_id)
+#             leadcategory = LeadcategorysubcategorySerializer(leadcategory_obj).data
+
+#         else:
+#             return Response({"status": False, "message": serializer.errors, "response": {}})
+
+#         return Response({"status": True, "message": "Success", "response": {}})
+
+
+
+
 # -------------------------------------file--------------------------------------
 
 
@@ -567,6 +613,13 @@ class ListFile(generics.GenericAPIView):
         serializer = FileSerializer(queryset, many=True)
         return Response(serializer.data)
 
+class ListFilebyid(generics.GenericAPIView):
+       
+    serializer_class=FileSerializer        
+    def get(self, request,id,pk):
+        queryset = File.objects.filter(lead_id=id,user_id=pk)
+        serializer = FileSerializer(queryset, many=True)
+        return Response(serializer.data)
 
 class DeleteFile(generics.DestroyAPIView):
        
@@ -633,6 +686,14 @@ class GetLeadremarks(generics.GenericAPIView):
     serializer_class=LeadremarksSerializer        
     def get(self, request,id):
         queryset = Leadremarks.objects.filter(lead_id=id)   #lead_id=id,use_
+        serializer = LeadremarksSerializer(queryset, many=True)
+        return Response(serializer.data)
+
+class GetLeadremarksbyuserid(generics.GenericAPIView):
+       
+    serializer_class=LeadremarksSerializer        
+    def get(self, request,id,pk):
+        queryset = Leadremarks.objects.filter(lead_id=id,user_id=pk)   #lead_id=id,use_
         serializer = LeadremarksSerializer(queryset, many=True)
         return Response(serializer.data)
 
@@ -761,9 +822,6 @@ class ListStatustracker(generics.GenericAPIView):
 class DeleteStatustracker(generics.DestroyAPIView):
        
     serializer_class=StatustrackerSerializer        
-
-
-
     def delete(self, request, pk):
         des = Statustracker.objects.get(id=pk)
         des.delete()
@@ -940,6 +998,29 @@ class ListLeadcategory(generics.GenericAPIView):
         return Response(ser.data)
 
 
+
+class ListLeadsubcategory(generics.GenericAPIView):
+       
+    serializer_class=LeadcategorySerializer        
+    def get(self, request, pk):
+        queryset = Leadcategory.objects.filter(lead_id=pk)
+        ser = LeadcategorySerializer(queryset, many=True)
+        return Response(ser.data)
+
+
+
+
+class GetLeadcategory(generics.GenericAPIView):
+       
+    serializer_class=LeadcategorySerializer        
+    def get(self, request ,id):
+        queryset = Leadcategory.objects.filter(designer_id=id)
+        ser = LeadcategorySerializer(queryset, many=True)
+        return Response(ser.data)
+
+
+        
+
 class DeleteLeadcategory(generics.DestroyAPIView):
        
     serializer_class=LeadcategorySerializer        
@@ -1090,3 +1171,32 @@ class Getcustomerfollowup(generics.GenericAPIView):
         return Response(ser.data)
 
 
+#--------------------------------list lead category subcategory-------------------------------------
+
+
+# class ListLeadsubcategoryyyyy(generics.GenericAPIView):       
+#     serializer_class=LeadcategorysubcategorySerializer        
+#     def get(self, request, pk):
+#         queryset = Leadcategory.objects.filter(lead_id=pk)
+#         ser = LeadcategorysubcategorySerializer(queryset, many=True)
+#         return Response(ser.data)
+
+
+
+
+
+
+
+
+# @api_view(['GET'])
+
+# def LeadCategorysubcategory(request,id,pk):
+#     obj=Lead()
+#     obj2=Leadcategory()
+#     if (obj.designer_id==id and obj2.lead_id==pk):
+#         lead=Lead.objects.(designer_id=id)
+#         leadid = Leadcategory.filter(lead_id=pk)
+#         leadcat = LeadcategorySerializer(leadid)
+#         leadser=LeadSerializer(lead)
+#         result =leadcat.data+leadser.data
+#         return Response(result)

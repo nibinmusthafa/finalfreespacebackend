@@ -103,6 +103,8 @@ class SubCategorySerializer(serializers.ModelSerializer):
         model = Sub_Category
         fields = ('id','name','cat_id')
 
+
+
 #-------------------------------categorysubtype-------------------------------------------
 class CategorySubtypeSerializer(serializers.ModelSerializer):
     class Meta:
@@ -165,6 +167,7 @@ class LeadSerializer(serializers.ModelSerializer):
     statusvalue= serializers.SerializerMethodField('get_statusvalue')
     leadsource=serializers.SerializerMethodField('get_leadsource')
     
+    
     class Meta:
         model = Lead
         fields =('id','leadsource','statusvalue','phonenumber','customername','created_by','designer_id','customer_id','status_id','leadname','description','renovation','leadsource_id','supervisor_id','updated_on')      
@@ -185,13 +188,15 @@ class LeadSerializer(serializers.ModelSerializer):
 
 class LeadcategorySerializer(serializers.ModelSerializer):
     lead_id=LeadSerializer()
-
+    subcat=serializers.SerializerMethodField('get_subcat')
     class Meta:
         model = Leadcategory
-        fields = ('id','lead_id','category_id','sub_cat_id','updated_on','units')
+        fields = ('id','lead_id','category_id','sub_cat_id','updated_on','units','subcat')
     def create(self, validated_data,categories):
         print(categories)
         items = validated_data.pop('lead_id')
+        # deigner_id = validated_data.get('deigner_id')
+        # supervisor_id = validated_data.get('supervisor_id')
         lead_obj = Lead.objects.create(**items)
         # leadcat = Leadcategory.objects.create(lead_id=lead_obj)
 
@@ -205,10 +210,11 @@ class LeadcategorySerializer(serializers.ModelSerializer):
             except:
                 sub_cat = None
 
-            
-            
             leadcat = Leadcategory.objects.create(lead_id=lead_obj,category_id=cat,sub_cat_id=sub_cat,units=c['units'])
             leadcat.save()
+
+    def get_subcat(self,obj):
+        return obj.sub_cat_id.name
 
 #---------------------------------------lead remarks----------------------------------------------
 
@@ -253,3 +259,33 @@ class TempfileSerializer(serializers.ModelSerializer):
         model = Tempfile
         fields ='__all__'
 
+# class LeadcategorysubcategorySerializer(serializers.ModelSerializer):
+#     # lead_id=LeadSerializer()
+#     designer = serializers.SerializerMethodField('get_designer') 
+#     class Meta:
+#         model = Leadcategory
+#         fields = ('id','lead_id','category_id','sub_cat_id','updated_on','units','designer')
+#     def create(self, validated_data,categories):
+#         print(categories)
+#         items = validated_data.pop('lead_id')
+#         # deigner_id = validated_data.get('deigner_id')
+#         # supervisor_id = validated_data.get('supervisor_id')
+#         lead_obj = Lead.objects.create(**items)
+#         # leadcat = Leadcategory.objects.create(lead_id=lead_obj)
+
+#         for c in categories:
+#             print(c)
+#             cat = Category.objects.get(id=c['category_id'])
+#             print(cat)
+            
+#             try:
+#                 sub_cat = Sub_Category.objects.get(id=c['sub_cat_id'])
+#             except:
+#                 sub_cat = None
+
+#             leadcat = Leadcategory.objects.create(lead_id=lead_obj,category_id=cat,sub_cat_id=sub_cat,units=c['units'])
+#             leadcat.save()
+
+
+#     def get_designer(self,obj):
+#         return obj.lead_id.designer_id.id

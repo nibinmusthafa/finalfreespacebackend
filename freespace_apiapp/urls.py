@@ -76,13 +76,15 @@ urlpatterns = [
     path('getleadbydesigners/<int:id>/', Getleadbydesigner.as_view()),
     path('getleadbyusers/<int:id>/', Getleadbyuser.as_view()),
     path('getleadbysupervisor/<int:id>/', Getleadbysupervisor.as_view()),
-    # ------Lead + Category + SubCategory------
+    
+    # ------Lead + Category + SubCategory----------------------------------------------------
     path('createlead/', LeadView.as_view()),
 
 
     # -------------------file------------------------------------------------------------------------
     path('addfile/', AddFile.as_view()),
     path('listfile/<int:pk>/', ListFile.as_view()),
+    path('listfilebyid/<int:id>/<int:pk>/', ListFilebyid.as_view()),
     path('deletefile/<int:pk>/', DeleteFile.as_view()),
     path('updatefile/<int:pk>/', UpdateFile.as_view()),
     # --------------------lead remarks---------------------------------------------------------------
@@ -93,7 +95,7 @@ urlpatterns = [
     # lead remarks filter with lead id and userid
     path('getleadremarks/<int:id>/', GetLeadremarks.as_view()),
     # path('viewleadremarks/',Viewleadremarks.as_view()),
-
+    path('getremarksbyuser/<int:id>/<int:pk>/',GetLeadremarksbyuserid.as_view()),
 
     # --------------------status---------------------------------------------------------------------
     path('addstatus/', AddStatus.as_view()),
@@ -112,6 +114,7 @@ urlpatterns = [
     # ----------------------subcategory--------------------------------------------------------------
     path('addsubcategory/', Addsubcategory.as_view()),
     path('listsubcategory/', Listsubcategory.as_view()),
+    # path('listsubcategory/', Listsubcategory.as_view()),
     path('deletesubcategory/<int:pk>/', Deletesubcategory.as_view()),
     path('updatesubcategory/<int:pk>/', Updatesubcategory.as_view()),
     # ----------------------categorysubtype-----------------------------------------------------------
@@ -127,9 +130,14 @@ urlpatterns = [
     # ----------------------------leadcategory-------------------------------------------------------
     path('addleadcategory/', AddLeadcategory.as_view()),
     path('listleadcategory/', ListLeadcategory.as_view()),
+    path('getleadcategorybylead/<int:pk>/', ListLeadsubcategory.as_view()),
     path('deleteleadcategory/<int:pk>/', DeleteLeadcategory.as_view()),
     path('updateleadcategory/<int:pk>/', UpdateLeadcategory.as_view()),
     path('patchleadcategory/<int:pk>/', Patchleadcategory.as_view()),
+    # path('leadCategorysubcategory/<int:id>/<int:pk>/',views.LeadCategorysubcategory),
+    # path('getleadcategorysubcatbylead/<int:pk>/', ListLeadsubcategoryyyyy.as_view()),
+    # path('getleadcategorysubcategory/<int:id>/', Leadcategorysubcategory.as_view()),
+
     # ----------------------------PROJECT------------------------------------------------------------
     path('addproject/', AddProject.as_view()),
     path('listproject/', ListProject.as_view()),

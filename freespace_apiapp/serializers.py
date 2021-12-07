@@ -1,3 +1,4 @@
+from typing import Type
 from rest_framework import serializers
 
 from django.db.models.query import QuerySet
@@ -15,9 +16,15 @@ from rest_framework.decorators import api_view
 
 from freespace_apiapp.models import Designation
 
-from .models import Address, Category, Category_Subtype, Country, Customer, Customer_Followup, Designation, File, Lead, LeadSource, Leadcategory, Leadremarks, Project, Project_Payment, State, Status, Statustracker, Sub_Category, Tempfile, User
+from .models import Address, Category, Country, Customer, Customer_Followup, Designation, File, Lead, LeadSource, Leadcategory, Leadremarks,  Project, Project_Payment, State, Status, Statustracker, Sub_Category, Tempfile, User
+#  Categorytype, Manpower, Manpowerdates, Natureofwork, Projectmanpower, Size,Category_Subtype,
 
 
+
+
+
+
+from rest_framework import serializers
 
 #--------------------------------------------designation--------------------------------------------------
 class DesignationSerializer(serializers.ModelSerializer):
@@ -47,6 +54,17 @@ class UserSerializer(serializers.ModelSerializer):
     def get_designation(self,obj):
         return obj.designation_id.designation_name
 
+#--------------------------------list users------------------------------------------
+
+class ListuserSerializer(serializers.ModelSerializer):
+
+    userdesignation = serializers.SerializerMethodField('get_designation') 
+    class Meta:
+        model = User
+        fields = ['id', 'name', 'email', 'designation_id','userdesignation']
+        
+    def get_designation(self,obj):
+        return obj.designation_id.designation_name
 #--------------------------------customer--------------------------------------------
 class CustomerSerializer(serializers.ModelSerializer):
     updated_by_name = serializers.SerializerMethodField('get_updatedbyname')
@@ -103,13 +121,6 @@ class SubCategorySerializer(serializers.ModelSerializer):
         model = Sub_Category
         fields = ('id','name','cat_id')
 
-
-
-#-------------------------------categorysubtype-------------------------------------------
-class CategorySubtypeSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Category_Subtype
-        fields = ('id','name','sub_cat_id')
 #-------------------------------leadsource------------------------------------------
 class LeadsourceSerializer(serializers.ModelSerializer):
     class Meta:
@@ -170,7 +181,7 @@ class LeadSerializer(serializers.ModelSerializer):
     
     class Meta:
         model = Lead
-        fields =('id','leadsource','statusvalue','phonenumber','customername','created_by','designer_id','customer_id','status_id','leadname','description','renovation','leadsource_id','supervisor_id','updated_on')      
+        fields =('id','leadsource','statusvalue','phonenumber','customername','created_by','designer_id','customer_id','status_id','leadname','description','renovation','leadsource_id','supervisor_id','updated_on','followup_date')      
     
     def get_customername(self,obj):
         return '{} {}'.format(obj.customer_id.customer_firstname,obj.customer_id.customer_lastname)
@@ -212,6 +223,7 @@ class LeadcategorySerializer(serializers.ModelSerializer):
 
             leadcat = Leadcategory.objects.create(lead_id=lead_obj,category_id=cat,sub_cat_id=sub_cat,units=c['units'])
             leadcat.save()
+           
 
     def get_subcat(self,obj):
         return obj.sub_cat_id.name
@@ -226,21 +238,6 @@ class LeadremarksSerializer(serializers.ModelSerializer):
 
     def get_username(self,obj):
         return obj.user_id.name
-
-#---------------------------------------project---------------------------------------------------------
-
-class ProjectSerializer(serializers.ModelSerializer):
-
-    class Meta:
-        model = Project
-        fields = ('id','lead_id','completion_date','tentative_date','user_id','superuser_id','designer_id','status_id','updated_on')
-
-#--------------------------------------project payement--------------------------------------------------
-class ProjectpaymentSerializer(serializers.ModelSerializer):
-
-    class Meta:
-        model =Project_Payment
-        fields = ('id','project_id','paytype','pay_amount','reason','updated_on')
 
 
 #-----------------------------Customer_Followup----------------------------------------
@@ -258,6 +255,82 @@ class TempfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = Tempfile
         fields ='__all__'
+
+
+# #-------------------------------categorysubtype-------------------------------------------
+# class CategorySubtypeSerializer(serializers.ModelSerializer):
+#     class Meta:
+#         model = Category_Subtype
+#         fields = '__all__'
+        
+#---------------------------------------project---------------------------------------------------------
+
+class ProjectSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Project
+        fields = '__all__'
+
+#--------------------------------------project payement--------------------------------------------------
+class ProjectpaymentSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model =Project_Payment
+        fields = '__all__'
+# #-------------------------------------------------Type---------------------------------
+
+# class TypeSerializer(serializers.ModelSerializer):
+#     class Meta:
+#         model = Type
+#         fields ='__all__'
+
+# #-------------------------------------------------Size---------------------------------
+
+# class SizeSerializer(serializers.ModelSerializer):
+#     class Meta:
+#         model = Size
+#         fields ='__all__'
+
+# #-------------------------------------------------Categorytype----------------------------------
+
+# class CategorytypeSerializer(serializers.ModelSerializer):
+#     class Meta:
+#         model = Categorytype
+#         fields ='__all__'
+
+# #-------------------------------------------------Manpower----------------------------------
+
+# class ManpowerSerializer(serializers.ModelSerializer):
+#     class Meta:
+#         model = Manpower
+#         fields ='__all__'
+
+
+# #-------------------------------------------------Projectmanpower----------------------------------
+
+# class ProjectmanpowerSerializer(serializers.ModelSerializer):
+#     class Meta:
+#         model = Projectmanpower
+#         fields ='__all__'
+    
+
+# #-------------------------------------------------Natureofwork----------------------------------
+
+# class NatureofworkSerializer(serializers.ModelSerializer):
+#     class Meta:
+#         model = Natureofwork
+#         fields ='__all__'
+
+
+# #-------------------------------------------------Manpowerdates---------------------------------
+
+# class ManpowerdatesSerializer(serializers.ModelSerializer):
+#     class Meta:
+#         model = Manpowerdates
+#         fields ='__all__'
+
+
+    
 
 # class LeadcategorysubcategorySerializer(serializers.ModelSerializer):
 #     # lead_id=LeadSerializer()
@@ -289,3 +362,88 @@ class TempfileSerializer(serializers.ModelSerializer):
 
 #     def get_designer(self,obj):
 #         return obj.lead_id.designer_id.id
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# class LeadSerializerrrr(serializers.ModelSerializer):
+#     followup = Customer_FollowupSerializer()
+
+#     customername = serializers.SerializerMethodField('get_customername')
+#     phonenumber = serializers.SerializerMethodField('get_phonenumber')
+#     statusvalue= serializers.SerializerMethodField('get_statusvalue')
+#     leadsource=serializers.SerializerMethodField('get_leadsource')
+    
+    
+#     class Meta:
+#         model = Lead
+#         fields =('id','leadsource','statusvalue','followup','phonenumber','customername','created_by','designer_id','customer_id','status_id','leadname','description','renovation','leadsource_id','supervisor_id','updated_on')      
+    
+#     def get_customername(self,obj):
+#         return '{} {}'.format(obj.customer_id.customer_firstname,obj.customer_id.customer_lastname)
+#     def get_phonenumber(self,obj):
+#         return obj.customer_id.customer_phonenumber
+#     def get_statusvalue(self,obj):
+#         return obj.status_id.status_value
+#     def get_leadsource(self,obj):
+#         return obj.leadsource_id.sourcevalue
+
+
+
+
+
+
+
+
+
+
+# class NewleadSerializer(serializers.ModelSerializer):
+
+#     # customername = serializers.SerializerMethodField('get_customername')
+#     # phonenumber = serializers.SerializerMethodField('get_phonenumber')
+#     # statusvalue= serializers.SerializerMethodField('get_statusvalue')
+#     # leadsource=serializers.SerializerMethodField('get_leadsource')
+    
+#     class Meta:
+#         model = Lead
+#         fields =('id','created_by','designer_id','customer_id','status_id','leadname','description')      
+    
+#     # def get_customername(self,obj):
+#     #     return '{} {}'.format(obj.customer_id.customer_firstname,obj.customer_id.customer_lastname)
+#     # def get_phonenumber(self,obj):
+#     #     return obj.customer_id.customer_phonenumber
+#     # def get_statusvalue(self,obj):
+#     #     return obj.status_id.status_value
+#     # def get_leadsource(self,obj):
+#     #     return obj.leadsource_id.sourcevalue
+
+# class NewcategorySerializer(serializers.ModelSerializer):
+
+#     # subcat=serializers.SerializerMethodField('get_subcat')
+
+#     class Meta:
+#         model = Leadcategory
+#         fields = ('id','lead_id','category_id')
+
+#     # def get_subcat(self,obj):
+#     #     return obj.sub_cat_id.name
+
+# class requestserilaizer(serializers.Serializer):
+#       created_by=serializers.IntegerField()
+#       designer_id=serializers.IntegerField()
+#       customer_id=serializers.IntegerField()
+#       status_id=serializers.IntegerField()
+#       leadname = serializers.CharField()
+#       description = serializers.CharField()
+#       lead_id = serializers.IntegerField()
+#       category_id = serializers.IntegerField()

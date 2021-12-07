@@ -4,6 +4,8 @@ from django.test import TestCase
 from django.urls import path
 from django.conf import settings
 from rest_framework import views
+
+# from freespace_apiapp.serializers import requestserilaizer
 from .views import *
 from .import views
 # from .views import AddAddress, AddCustomer, AddDesignation, DeleteAddress, DeleteCustomer, GetCustomer, GetDesignation, ListAddress, ListCustomers, ListDesignations, ListState, Listdesigners, Listsupervisor, ListuserView, PatchCustomer, RegisterView, LoginView, UpdateAddress, UserView, LogoutView
@@ -20,6 +22,8 @@ urlpatterns = [
     path('login/', LoginView.as_view()),
     path('user/', UserView.as_view()),
     path('logout/', LogoutView.as_view()),
+    path('listusers/', Listuserss.as_view()),
+   
 
 
     #path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
@@ -70,8 +74,11 @@ urlpatterns = [
     path('getlead/<int:pk>/', GetLead.as_view()),
     path('deletelead/<int:pk>/', DeleteLead.as_view()),
     path('updatelead/<int:pk>/', UpdateLead.as_view()),
+    path('getleadbyfollowup/<int:pk>/',Getleadbyfollowup.as_view()),
     # ----update status in lead------
-    path('updatestatusinlead/<int:pk>/', views.PatchLead.as_view()),
+    path('updatestatusinlead/<int:pk>/',PatchLead.as_view()),
+    path('updatefollowupinlead/<int:pk>/',PatchLead.as_view()),
+ 
     # ------list leads by ID ss------
     path('getleadbydesigners/<int:id>/', Getleadbydesigner.as_view()),
     path('getleadbyusers/<int:id>/', Getleadbyuser.as_view()),
@@ -79,6 +86,8 @@ urlpatterns = [
     
     # ------Lead + Category + SubCategory----------------------------------------------------
     path('createlead/', LeadView.as_view()),
+    # 
+    # path('leadleadeeey/', requestserilaizer.as_view()),
 
 
     # -------------------file------------------------------------------------------------------------
@@ -118,10 +127,10 @@ urlpatterns = [
     path('deletesubcategory/<int:pk>/', Deletesubcategory.as_view()),
     path('updatesubcategory/<int:pk>/', Updatesubcategory.as_view()),
     # ----------------------categorysubtype-----------------------------------------------------------
-    path('addcategorysubtype/', Addcategorysubtype.as_view()),
-    path('listscategorysubtype/', Listcategorysubtype.as_view()),
-    path('deletecategorysubtype/<int:pk>/', Deletecategorysubtype.as_view()),
-    path('updatecategorysubtype/<int:pk>/', Updatecategorysubtype.as_view()),
+    # path('addcategorysubtype/', Addcategorysubtype.as_view()),
+    # path('listscategorysubtype/', Listcategorysubtype.as_view()),
+    # path('deletecategorysubtype/<int:pk>/', Deletecategorysubtype.as_view()),
+    # path('updatecategorysubtype/<int:pk>/', Updatecategorysubtype.as_view()),
     # ----------------------------leadsource---------------------------------------------------------
     path('addleadsource/', AddLeadsource.as_view()),
     path('listleadsource/', ListLeadsource.as_view()),
@@ -134,6 +143,7 @@ urlpatterns = [
     path('deleteleadcategory/<int:pk>/', DeleteLeadcategory.as_view()),
     path('updateleadcategory/<int:pk>/', UpdateLeadcategory.as_view()),
     path('patchleadcategory/<int:pk>/', Patchleadcategory.as_view()),
+
     # path('leadCategorysubcategory/<int:id>/<int:pk>/',views.LeadCategorysubcategory),
     # path('getleadcategorysubcatbylead/<int:pk>/', ListLeadsubcategoryyyyy.as_view()),
     # path('getleadcategorysubcategory/<int:id>/', Leadcategorysubcategory.as_view()),
@@ -153,6 +163,10 @@ urlpatterns = [
     path('addfollowup/', AddCustomer_Followup.as_view()),
     path('listfollowup/', Listcustomerfollowup.as_view()),
     path('getfollowup/<int:pk>/', Getcustomerfollowup.as_view()),
+    path('updatecustomerfollowup/<int:pk>/', Updatecustomerfollowup.as_view()),
     path('addimage/', AddImage.as_view()),
+
+
+  
 
 ]

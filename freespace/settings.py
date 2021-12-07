@@ -163,7 +163,7 @@ WSGI_APPLICATION = 'freespace.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'freespace',
+        'NAME': 'freespace_freespace',
         'USER': 'root',
         'PASSWORD': 'Ayana@1234',
         'HOST': 'localhost',

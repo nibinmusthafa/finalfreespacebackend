@@ -42,7 +42,7 @@ class Customer(models.Model):
 
 
     class Meta:
-        ordering =['customer_firstname','customer_lastname']
+        ordering =['id']
     
     def __str__(self):
         return str(self.customer_phonenumber)
@@ -98,17 +98,6 @@ class Sub_Category(models.Model):
     def __str__(self):
         return self.name
 
-#----------------------------------------------Category Subtype--------------------------------------------------
-
-class Category_Subtype(models.Model):
-    name = models.CharField(max_length=100,null=True)
-    sub_cat_id = models.ForeignKey(Sub_Category,on_delete=models.CASCADE,null=True)
-
-    class Meta:
-        ordering =['id']
-
-    def __str__(self):
-        return self.name
 
 #---------------------------------------------Status----------------------------------------------
 class Status(models.Model):
@@ -148,10 +137,11 @@ class Lead(models.Model):
     leadsource_id = models.ForeignKey(LeadSource,on_delete=models.CASCADE,null=True)
     supervisor_id = models.ForeignKey(User,related_name='supervisor_id',on_delete=models.CASCADE,null=True)
     updated_on = models.DateTimeField(auto_now_add=True)
-
+    followup_date=models.DateField(null=True)
+    # quotation_amount=models.IntegerField(null=True)
     
     class Meta:
-        ordering =['id']
+        ordering =['-id']
 
     def __str__(self):
         return str(self.leadname)
@@ -229,7 +219,25 @@ class Leadcategory(models.Model):
         ordering =['-id']
 
     def __str__(self):
-        return str(self.lead_id)
+        return str(self.units)
+
+
+
+#--------------------------------------Customer_Followup------------------------------------------------------------
+
+class Customer_Followup(models.Model):
+    lead_id=models.ForeignKey(Lead,on_delete=models.CASCADE)
+    updated_by=models.ForeignKey(User,on_delete=models.CASCADE)
+    followup_date=models.DateField(null=True)
+    datetime = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering =['-datetime']
+
+    def __str__(self):
+        return self.followup_date
+
+
 
 #--------------------------------------Project------------------------------------------------------------
 
@@ -256,30 +264,132 @@ class Project(models.Model):
 
 class Project_Payment(models.Model):
     project_id = models.ForeignKey(Project,on_delete=models.CASCADE)
-    paytype = models.CharField(max_length=200)
     pay_amount = models.IntegerField()
     reason = models.CharField(max_length=200,null=True)
     updated_on = models.DateTimeField(auto_now_add=True) 
-
+    updated_by =models.ForeignKey(User,on_delete=CASCADE,null=True)
+    lead_id=models.ForeignKey(Lead,on_delete=models.CASCADE,null=True)
     class Meta:
         ordering =['id']
 
     def __str__(self):
         return self.updated_on
 
+#------------------------------------type------------------------------------------
 
-#--------------------------------------Customer_Followup------------------------------------------------------------
 
-class Customer_Followup(models.Model):
-    lead_id=models.ForeignKey(Lead,on_delete=models.CASCADE)
-    updated_by=models.ForeignKey(User,on_delete=models.CASCADE)
-    followup_date=models.DateField(null=True)
-    datetime = models.DateTimeField(auto_now_add=True)
+class Type(models.Model):
+    type=models.CharField(max_length=50)
 
     class Meta:
-        ordering =['-datetime']
+        ordering =['type']
 
     def __str__(self):
-        return self.followup_date
+        return self.type
+
+
+#------------------------------------size------------------------------------------
+
+
+class Size(models.Model):
+    size=models.CharField(max_length=50)
+
+    class Meta:
+        ordering =['size']
+
+    def __str__(self):
+        return self.size
+#------------------------------------Categorytype------------------------------------------
+
+
+class Categorytype(models.Model):
+    remarks=models.CharField(max_length=200)
+    lead_id=models.ForeignKey(Lead,on_delete=models.CASCADE)
+    lead_cat_id=models.ForeignKey(Leadcategory,on_delete=models.CASCADE) 
+    updated_by=models.ForeignKey(User,on_delete=models.CASCADE)
+    updated_on=models.DateField(auto_now_add=True)
+
+    class Meta:
+        ordering =['remarks']
+
+    def __str__(self):
+        return self.remarks
+
+
+
+# ----------------------------------------------Category Subtype--------------------------------------------------
+
+class Category_Subtype(models.Model):
+    cat_type_id=models.ForeignKey(Categorytype,on_delete=models.CASCADE,null=True)
+    type_id=models.ForeignKey(Type,on_delete=models.CASCADE,null=True)
+    texture=models.CharField(max_length=100,null=True)
+    unit=models.IntegerField(null=True)
+    area=models.IntegerField(null=True)
+    color=models.CharField(max_length=50,null=True)
+    size_id=models.ForeignKey(Size,on_delete=models.CASCADE,null=True)
+    updated_by=models.ForeignKey(User,on_delete=models.CASCADE,null=True)
+    updated_on=models.DateField(auto_now_add=True,null=True)
+
+    class Meta:
+        ordering =['id']
+
+    def __str__(self):
+        return self.texture
+
+#----------------------------------------------Manpower--------------------------------------------------
+
+class Manpower(models.Model):
+    type=models.CharField(max_length=100)
+    value=models.IntegerField()
+
+    class Meta:
+        ordering =['id']
+
+    def __str__(self):
+        return self.type
+#----------------------------------------------Project Manpower--------------------------------------------------
+
+class Projectmanpower(models.Model):
+    lead_id=models.ForeignKey(Lead,on_delete=models.CASCADE)
+    manpower_id=models.ForeignKey(Manpower,on_delete=models.CASCADE)
+    numbers=models.IntegerField()
+    updated_by=models.ForeignKey(User,on_delete=models.CASCADE)
+    updated_on=models.DateField(auto_now_add=True)
+    
+
+    class Meta:
+        ordering =['id']
+
+    def __str__(self):
+        return str(self.numbers)
+#----------------------------------------------nature of work--------------------------------------------------
+
+class Natureofwork(models.Model):
+    nature=models.CharField(max_length=100)
+    
+
+    class Meta:
+        ordering =['id']
+
+    def __str__(self):
+        return self.nature
+   
+
+#----------------------------------------------Manpowerdates--------------------------------------------------
+
+class Manpowerdates(models.Model):
+    project_manpower_id=models.ForeignKey(Projectmanpower,on_delete=models.CASCADE)
+    start_date=models.DateField()
+    end_date=models.DateField()
+    nature_of_work_id=models.ForeignKey(Natureofwork,on_delete=models.CASCADE)
+    updated_by=models.ForeignKey(User,on_delete=models.CASCADE)
+    updated_on=models.DateField(auto_now_add=True)
+    
+
+    class Meta:
+        ordering =['id']
+
+    def __str__(self):
+        return str(self.start_date)
 
 

@@ -1,8 +1,8 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.exceptions import AuthenticationFailed
-from .serializers import AddressSerializer, CategorySerializer, CategorySubtypeSerializer, CountrySerializer, Customer_FollowupSerializer, CustomerSerializer, DesignationSerializer, FileSerializer, LeadSerializer, LeadcategorySerializer,LeadremarksSerializer, LeadsourceSerializer, ProjectSerializer, ProjectpaymentSerializer, SingleaddressSerializer, StateSerializer, StatusSerializer, StatustrackerSerializer, SubCategorySerializer, TempfileSerializer, UserSerializer
-from .models import Address, Category, Category_Subtype, Country, Customer, Customer_Followup, Designation, File, Lead, LeadSource, Leadcategory, Leadremarks, Project, Project_Payment, State, Status, Statustracker, Sub_Category, User
+from .serializers import AddressSerializer, CategorySerializer, CountrySerializer, Customer_FollowupSerializer, CustomerSerializer, DesignationSerializer, FileSerializer, LeadSerializer, LeadcategorySerializer,LeadremarksSerializer, LeadsourceSerializer, ListuserSerializer, ProjectSerializer, ProjectpaymentSerializer, SingleaddressSerializer, StateSerializer, StatusSerializer, StatustrackerSerializer, SubCategorySerializer, TempfileSerializer, UserSerializer
+from .models import Address, Category,  Country, Customer, Customer_Followup, Designation, File, Lead, LeadSource, Leadcategory, Leadremarks, Project, Project_Payment, State, Status, Statustracker, Sub_Category, User
 import jwt, datetime
 
 from rest_framework import generics
@@ -11,6 +11,13 @@ from rest_framework import status
 
 
 from rest_framework.decorators import api_view
+
+
+
+
+
+
+
 
 # from rest_framework.permissions import IsAuthenticated
 
@@ -77,6 +84,16 @@ class UserView(APIView):
    
         user = User.objects.filter(id=payload['id']).first()
         serializer = UserSerializer(user)
+        return Response(serializer.data)
+
+
+
+class Listuserss(generics.GenericAPIView):
+       
+    serializer_class=ListuserSerializer        
+    def get(self, request):
+        queryset = User.objects.all()
+        serializer = ListuserSerializer(queryset, many=True)
         return Response(serializer.data)
 
 #--------------------------------------------------logout----------------------------------------
@@ -486,7 +503,19 @@ class PatchLead(generics.UpdateAPIView):
             ser = LeadSerializer(instance=des, data=request.data,partial=True)
             if ser.is_valid():
                 ser.save()
+                print(ser)
                 return Response(ser.data)
+
+class Getleadbyfollowup(generics.GenericAPIView):
+       
+    serializer_class=LeadSerializer        
+    def get(self, request, pk):
+        queryset = Lead.objects.get(id=pk)
+        serializer = LeadSerializer(queryset, many=False)
+        print(serializer.data)
+        # followup = serializer.data['followup_date']
+        # print(followup)
+        return Response({'followup_date':serializer.data['followup_date']})      
 
 
 
@@ -530,6 +559,7 @@ class LeadView(generics.CreateAPIView):
        
     serializer_class = LeadcategorySerializer
     model = Leadcategory
+    
 
     def create(self, request, *args, **kwargs):
 
@@ -542,11 +572,11 @@ class LeadView(generics.CreateAPIView):
             leadcategory_obj = LeadcategorySerializer.create(
                 self, serializer.validated_data, categories)
             leadcategory = LeadcategorySerializer(leadcategory_obj).data
-
-        else:
-            return Response({"status": False, "message": serializer.errors, "response": {}})
-
-        return Response({"status": True, "message": "Success", "response": {}})
+            obj = Lead.objects.latest('id')
+            print(obj.id)
+            return Response({"lead_id":obj.id})
+        # return Response(leadcategory_obj)
+        return Response({"status": False, "response": {}})
 
 
 # class listleadbysupervisor(generics.GenericAPIView):
@@ -889,49 +919,49 @@ class Updatesubcategory(generics.UpdateAPIView):
 #--------------------------Category_Subtype#-----------------------------------------------
 
 
-class Addcategorysubtype(generics.CreateAPIView):
+# class Addcategorysubtype(generics.CreateAPIView):
        
-    serializer_class=CategorySubtypeSerializer        
-    def post(self, request):
-        duplicate = Category_Subtype.objects.filter(
-            name__icontains=request.data['name']).count()
-        if duplicate > 0:
-            return Response("item already exists")
-        else:
-            serializer = CategorySubtypeSerializer(data=request.data)
-            if serializer.is_valid():
-                serializer.save()
-                return Response("added successfully")
-            return Response("failed")
+#     serializer_class=CategorySubtypeSerializer        
+#     def post(self, request):
+#         duplicate = Category_Subtype.objects.filter(
+#             name__icontains=request.data['name']).count()
+#         if duplicate > 0:
+#             return Response("item already exists")
+#         else:
+#             serializer = CategorySubtypeSerializer(data=request.data)
+#             if serializer.is_valid():
+#                 serializer.save()
+#                 return Response("added successfully")
+#             return Response("failed")
 
 
-class Listcategorysubtype(generics.GenericAPIView):
+# class Listcategorysubtype(generics.GenericAPIView):
        
-    serializer_class=CategorySubtypeSerializer        
-    def get(self, request):
-        queryset = Category_Subtype.objects.all()
-        ser = CategorySubtypeSerializer(queryset, many=True)
-        return Response(ser.data)
+#     serializer_class=CategorySubtypeSerializer        
+#     def get(self, request):
+#         queryset = Category_Subtype.objects.all()
+#         ser = CategorySubtypeSerializer(queryset, many=True)
+#         return Response(ser.data)
 
 
-class Deletecategorysubtype(generics.DestroyAPIView):
+# class Deletecategorysubtype(generics.DestroyAPIView):
        
-    serializer_class=CategorySubtypeSerializer        
-    def delete(self, request, pk):
-        des = Category_Subtype.objects.get(id=pk)
-        des.delete()
-        return Response("Deleted!!")
+#     serializer_class=CategorySubtypeSerializer        
+#     def delete(self, request, pk):
+#         des = Category_Subtype.objects.get(id=pk)
+#         des.delete()
+#         return Response("Deleted!!")
 
 
-class Updatecategorysubtype(generics.UpdateAPIView):
+# class Updatecategorysubtype(generics.UpdateAPIView):
        
-    serializer_class=CategorySubtypeSerializer        
-    def put(self, request, pk):
-        des = Category_Subtype.objects.get(id=pk)
-        ser = CategorySubtypeSerializer(instance=des, data=request.data)
-        if ser.is_valid():
-            ser.save()
-            return Response("updated")
+#     serializer_class=CategorySubtypeSerializer        
+#     def put(self, request, pk):
+#         des = Category_Subtype.objects.get(id=pk)
+#         ser = CategorySubtypeSerializer(instance=des, data=request.data)
+#         if ser.is_valid():
+#             ser.save()
+#             return Response("updated")
 
 #---------------------------leadsource-------------------------------------------------------
 
@@ -1171,6 +1201,31 @@ class Getcustomerfollowup(generics.GenericAPIView):
         return Response(ser.data)
 
 
+
+class Updatecustomerfollowup(generics.UpdateAPIView):
+       
+    serializer_class=Customer_FollowupSerializer        
+    def patch(self, request, pk):
+            des = Customer_Followup.objects.get(id=pk)
+            ser = Customer_FollowupSerializer(instance=des, data=request.data,partial=True)
+            if ser.is_valid():
+                ser.save()
+                return Response(ser.data)
+
+# class ListLeadddddd(generics.GenericAPIView):
+       
+#     serializer_class=LeadSerializerrrr        
+#     def get(self, request,pk):
+#         queryset = Lead.objects.all()
+#         querysett = Customer_Followup.objects.filter(lead_id=pk).order_by('-datetime')[:1]
+#         lead = LeadSerializer(queryset, many=True)
+#         custfollow = Customer_FollowupSerializer(querysett,many=True)
+#         result = lead+custfollow
+#         return Response(result)
+
+
+
+
 #--------------------------------list lead category subcategory-------------------------------------
 
 
@@ -1200,3 +1255,25 @@ class Getcustomerfollowup(generics.GenericAPIView):
 #         leadser=LeadSerializer(lead)
 #         result =leadcat.data+leadser.data
 #         return Response(result)
+
+
+
+# @api_view(['GET'])
+
+# def LeadCustfollow(request):
+
+#     queryset = Lead.objects.all()
+#     querysett = Customer_Followup.objects.all()
+#     leadser = LeadSerializer(queryset,many=True)
+#     custfollow=Customer_FollowupSerializer(querysett,many=True)
+#     result =leadser.data+custfollow.data
+#     return Response(result)
+
+
+
+
+
+
+
+
+

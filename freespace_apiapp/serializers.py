@@ -181,7 +181,7 @@ class LeadSerializer(serializers.ModelSerializer):
     
     class Meta:
         model = Lead
-        fields =('id','leadsource','statusvalue','phonenumber','customername','created_by','designer_id','customer_id','status_id','leadname','description','renovation','leadsource_id','supervisor_id','updated_on','followup_date')      
+        fields =('id','quotation_amount','leadsource','statusvalue','phonenumber','customername','created_by','designer_id','customer_id','status_id','leadname','description','renovation','leadsource_id','supervisor_id','updated_on','followup_date')      
     
     def get_customername(self,obj):
         return '{} {}'.format(obj.customer_id.customer_firstname,obj.customer_id.customer_lastname)

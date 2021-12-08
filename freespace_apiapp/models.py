@@ -138,7 +138,7 @@ class Lead(models.Model):
     supervisor_id = models.ForeignKey(User,related_name='supervisor_id',on_delete=models.CASCADE,null=True)
     updated_on = models.DateTimeField(auto_now_add=True)
     followup_date=models.DateField(null=True)
-    # quotation_amount=models.IntegerField(null=True)
+    quotation_amount=models.IntegerField(null=True)
     
     class Meta:
         ordering =['-id']

@@ -23,14 +23,14 @@ from rest_framework.decorators import api_view
 
 # Create your views here.
 
-#----------------------------------------register--------------------------------------------
+#----------------------------------------register------------------------------------------------------
 class RegisterView(APIView):
     def post(self, request):
         serializer = UserSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         serializer.save()
         return Response(serializer.data)
-#-------------------------------------------loginview--------------------------------------
+#-------------------------------------------loginview---------------------------------------------------
 
 class LoginView(APIView):
     def post(self, request):

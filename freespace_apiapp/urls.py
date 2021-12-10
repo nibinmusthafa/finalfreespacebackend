@@ -23,6 +23,8 @@ urlpatterns = [
     path('user/', UserView.as_view()),
     path('logout/', LogoutView.as_view()),
     path('listusers/', Listuserss.as_view()),
+    path('getuser/<int:pk>/', Getuserbyid.as_view()),
+    path('updateuser/<int:pk>/', Updateuser.as_view()),
    
 
 
@@ -48,12 +50,14 @@ urlpatterns = [
     # ----------------------address------------------------------------------------------------------
     path('addaddress/', AddAddress.as_view()),
     path('listaddress/', ListAddress.as_view()),
+    path('getaddressbyid/<int:pk>/', ListAddressbyid.as_view()),
+    
     path('deleteaddress/<int:pk>/', DeleteAddress.as_view()),
     path('updateaddress/<int:pk>/', UpdateAddress.as_view()),
     # single customer single address
     path('addcustomer/', Createsingleaddress.as_view()),
-    #path('updateecustomer/<int:pk>/', Updatesingleaddress.as_view()),
-    #path('updatecustomerandaddress/<int:id>/<int:pk>/', UpdateAddresscustomer.as_view()),
+    # path('updateecustomer/<int:pk>/', Updatesingleaddress.as_view()),
+    # path('updatecustomerandaddress/<int:id>/<int:pk>/', UpdateAddresscustomer.as_view()),
     
     # ---------------------customer------------------------------------------------------------------
     path('addsinglecustomer/', AddCustomer.as_view()),
@@ -67,6 +71,7 @@ urlpatterns = [
     path('listcategory/', ListCategory.as_view()),
     path('deletecategory/<int:pk>/', DeleteCategory.as_view()),
     path('updatecategory/<int:pk>/', UpdateCategory.as_view()),
+    path('getcategory/<int:pk>/', GetCategory.as_view()),
     # ----------------------------------LEAD--------------------------------------------------------
 
     path('addlead/', AddLead.as_view()),
@@ -123,7 +128,8 @@ urlpatterns = [
     # ----------------------subcategory--------------------------------------------------------------
     path('addsubcategory/', Addsubcategory.as_view()),
     path('listsubcategory/', Listsubcategory.as_view()),
-    # path('listsubcategory/', Listsubcategory.as_view()),
+
+    path('getsubcategory/<int:pk>/', Getsubcategory.as_view()),
     path('deletesubcategory/<int:pk>/', Deletesubcategory.as_view()),
     path('updatesubcategory/<int:pk>/', Updatesubcategory.as_view()),
     # ----------------------categorysubtype-----------------------------------------------------------

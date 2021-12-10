@@ -90,13 +90,21 @@ class CountrySerializer(serializers.ModelSerializer):
 #------------------------------single address-------------------------------------------
 
 class AddressSerializer(serializers.ModelSerializer):
+    state_name = serializers.SerializerMethodField('get_statename')
+    countryname = serializers.SerializerMethodField('get_countryname')
     class Meta:
         model = Address
-        fields = ('id','customer_id','addr_line1','addr_line2','city','pincode','updated_on','state_id','country_id')
+        fields = ('id','customer_id','addr_line1','addr_line2','city','pincode','updated_on','state_id','state_name','country_id','countryname')
+
+    def get_statename(self,obj):
+        return obj.state_id.state_name
+    def get_countryname(self,obj):
+        return obj.country_id.country_name
 # --------------------------------single customer address--------------------------------------------
 
 class SingleaddressSerializer(serializers.ModelSerializer):
     customer_id=CustomerSerializer()
+
 
     class Meta:
         model = Address
@@ -106,6 +114,9 @@ class SingleaddressSerializer(serializers.ModelSerializer):
         customer_obj = Customer.objects.create(**items)
         address =Address.objects.create(**validated_data,customer_id=customer_obj)
         return address
+
+
+
 
 
 

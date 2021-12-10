@@ -163,7 +163,7 @@ WSGI_APPLICATION = 'freespace.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'freespace_freespace',
+        'NAME': 'freespace_freespace1',
         'USER': 'root',
         'PASSWORD': 'Ayana@1234',
         'HOST': 'localhost',
@@ -217,7 +217,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 
 REST_FRAMEWORK = {
-    # 'DATETIME_FORMAT': '%B %d, %Y', # returns November 8, 2021
+    'DATETIME_FORMAT': '%m-%d-%Y %H:%M:%S', # returns 10-22-2021 (for '%B %d, %Y ' November 8, 2021 )   
     "DATE_INPUT_FORMATS": ["%m/%d/%Y"],  # return   31/03/2020
 }
 

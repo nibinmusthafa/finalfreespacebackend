@@ -96,6 +96,26 @@ class Listuserss(generics.GenericAPIView):
         serializer = ListuserSerializer(queryset, many=True)
         return Response(serializer.data)
 
+
+class Getuserbyid(generics.GenericAPIView):
+       
+    serializer_class=ListuserSerializer        
+    def get(self, request, pk):
+        queryset = User.objects.get(id=pk)
+        serializer = ListuserSerializer(queryset, many=False)
+        return Response(serializer.data)
+
+
+class Updateuser(generics.UpdateAPIView):
+       
+    serializer_class=ListuserSerializer        
+    def put(self, request, pk):
+        des = User.objects.get(id=pk)
+        ser = ListuserSerializer(instance=des, data=request.data)
+        if ser.is_valid():
+            ser.save()
+            return Response("Updated!!")
+
 #--------------------------------------------------logout----------------------------------------
 class LogoutView(APIView):
     def post(self, request):
@@ -231,7 +251,7 @@ class DeleteCustomer(generics.DestroyAPIView):
 class PatchCustomer(generics.UpdateAPIView):
        
     serializer_class=CustomerSerializer        
-    def patch(self, request, pk):
+    def put(self, request, pk):
         des = Customer.objects.get(id=pk)
         ser = CustomerSerializer(instance=des, data=request.data)
         if ser.is_valid():
@@ -261,6 +281,16 @@ class ListAddress(generics.GenericAPIView):
         serializer = AddressSerializer(queryset, many=True)
         return Response(serializer.data)
 
+class ListAddressbyid(generics.GenericAPIView):
+       
+    serializer_class=AddressSerializer        
+    def get(self, request, pk):
+        queryset = Address.objects.get(customer_id=pk)
+        serializer = AddressSerializer(queryset, many=False)
+        return Response(serializer.data)
+
+
+
 
 class DeleteAddress(generics.DestroyAPIView):
        
@@ -274,7 +304,7 @@ class DeleteAddress(generics.DestroyAPIView):
 class UpdateAddress(generics.UpdateAPIView):
        
     serializer_class=AddressSerializer        
-    def patch(self, request, pk):
+    def put(self, request, pk):
         des = Address.objects.get(id=pk)
         ser = AddressSerializer(instance=des, data=request.data)
         if ser.is_valid():
@@ -319,7 +349,7 @@ class ListState(generics.GenericAPIView):
         queryset = State.objects.all()
         serializer = StateSerializer(queryset, many=True)
         return Response(serializer.data)
-
+# CountrySerializer
 
 # class DeleteState(generics.DestroyAPIView):
        
@@ -423,6 +453,16 @@ class ListCategory(generics.GenericAPIView):
     def get(self, request):
         queryset = Category.objects.all()
         serializer = CategorySerializer(queryset, many=True)
+        return Response(serializer.data)
+
+
+
+class GetCategory(generics.GenericAPIView):
+       
+    serializer_class=CategorySerializer        
+    def get(self, request, pk):
+        queryset = Category.objects.get(id=pk)
+        serializer = CategorySerializer(queryset, many=False)
         return Response(serializer.data)
 
 
@@ -896,6 +936,14 @@ class Listsubcategory(generics.GenericAPIView):
         ser = SubCategorySerializer(queryset, many=True)
         return Response(ser.data)
 
+
+class Getsubcategory(generics.GenericAPIView):
+       
+    serializer_class=SubCategorySerializer        
+    def get(self, request,pk):
+        queryset = Sub_Category.objects.get(id=pk)
+        ser = SubCategorySerializer(queryset, many=False)
+        return Response(ser.data)
 
 class Deletesubcategory(generics.DestroyAPIView):
        
